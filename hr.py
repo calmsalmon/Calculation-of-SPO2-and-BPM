@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy.signal import find_peaks, detrend
 
-def calculate_hr(green_csv):
+def calculate_hr(green_csv, tail):
     df = pd.read_csv(green_csv, 
                      skiprows=1,
                      header=None)
@@ -19,8 +19,19 @@ def calculate_hr(green_csv):
     # Calculate bpm based on distance between 2 beats 
     peak_difference = np.diff(peaks)
     bpm = 60 / (peak_difference / 25)
+
+    # Calculate the difference between the last peak of the last sample
+    # and the first peak of the current sample
+    first_difference = tail + peaks[0]
+
+    # Calculate bpm for first peak
+    first_bpm = 60 / (first_difference / 25)
+    bpm = np.concatenate([first_bpm], bpm)
+
+    # Get tail for next sample
+    tail = len(df) - peaks[-1]
     
-    return bpm
+    return bpm, tail
 
 calculate_hr('C:\\Users\\John Doe\\Desktop\\biophotonics-data-processing\\data\\green.csv')
 
