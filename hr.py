@@ -2,11 +2,9 @@ import pandas as pd
 import numpy as np
 from scipy.signal import find_peaks, detrend
 
-def calculate_hr(green_csv, tail):
-    df = pd.read_csv(green_csv, 
-                     skiprows=1,
-                     header=None)
-    df.columns = ['green']
+def calculate_hr(data, tail):
+    df = pd.Dataframe(data).astype(float)
+    df.columns = ['green', 'ir', 'red', 'ambient']
 
     # Remove dips
     df = df[df["green"] > 70000].reset_index(drop=True)
@@ -32,6 +30,3 @@ def calculate_hr(green_csv, tail):
     tail = len(df) - peaks[-1]
     
     return bpm, tail
-
-calculate_hr('C:\\Users\\John Doe\\Desktop\\biophotonics-data-processing\\data\\green.csv')
-

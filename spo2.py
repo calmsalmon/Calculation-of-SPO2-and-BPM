@@ -11,10 +11,8 @@ def calculate_ac_dc(data):
 
 
 # calculate SPO2
-def calculate_spo2(csv_file):
-    df = pd.read_csv(csv_file, 
-                    skiprows=1,
-                    header=None)
+def calculate_spo2(data):
+    df = pd.DataFrame(data).astype(float)
     df.columns = ['green', 'ir', 'red', 'ambient']
 
     df['red'] = df['red'] - df['ambient']
@@ -28,6 +26,3 @@ def calculate_spo2(csv_file):
     spo2 = 110 - 25 * ratio_of_ratios
 
     return spo2
-
-
-calculate_spo2('C:\\Users\\John Doe\\Desktop\\ppg-program\\data\\rgia.csv')
