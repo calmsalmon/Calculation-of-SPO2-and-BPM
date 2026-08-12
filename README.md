@@ -8,6 +8,7 @@ The following libraries were used in Python:
 - serial
 - scipy
 - numpy
+- matplotlib
 
 
 ## Getting Started
