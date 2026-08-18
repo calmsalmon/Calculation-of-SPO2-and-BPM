@@ -29,7 +29,9 @@ def read_serial():
                 decoded = raw_line.decode("utf-8").strip()
 
                 if decoded:  
-                    lines.append(decoded)
+                    pieces = decoded.split(',')
+                    
+                    lines.append(pieces)
 
             except UnicodeDecodeError:
                 pass 
