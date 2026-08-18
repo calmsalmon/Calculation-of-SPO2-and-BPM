@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 from scipy.signal import find_peaks, detrend
 
-def calculate_hr(data, tail):
+def calculate_hr(data, hr_tail):
     df = pd.Dataframe(data).astype(float)
-    df.columns = ['green', 'ir', 'red', 'ambient']
+    df.columns = ['times', 'green', 'red', 'ir', 'ambient']
 
     # Remove dips
     df = df[df["green"] > 70000].reset_index(drop=True)
@@ -18,13 +18,16 @@ def calculate_hr(data, tail):
     peak_difference = np.diff(peaks)
     bpm = 60 / (peak_difference / 25)
 
-    # Calculate the difference between the last peak of the last sample
-    # and the first peak of the current sample
-    first_difference = tail + peaks[0]
+    if hr_tail[0] != None:
+        tail = tail[0]
 
-    # Calculate bpm for first peak
-    first_bpm = 60 / (first_difference / 25)
-    bpm = np.concatenate([first_bpm], bpm)
+        # Calculate the difference between the last peak of the last sample
+        # and the first peak of the current sample
+        first_difference = tail + peaks[0]
+
+        # Calculate bpm for first peak
+        first_bpm = 60 / (first_difference / 25)
+        bpm = np.concatenate([first_bpm], bpm)
 
     # Get tail for next sample
     tail = len(df) - peaks[-1]

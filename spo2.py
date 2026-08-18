@@ -13,7 +13,7 @@ def calculate_ac_dc(data):
 # calculate SPO2
 def calculate_spo2(data):
     df = pd.DataFrame(data).astype(float)
-    df.columns = ['green', 'ir', 'red', 'ambient']
+    df.columns = ['times', 'green', 'red', 'ir', 'ambient']
 
     df['red'] = df['red'] - df['ambient']
     df['ir'] = df['ir'] - df['ambient']

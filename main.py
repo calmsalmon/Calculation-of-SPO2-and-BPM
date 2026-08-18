@@ -37,12 +37,12 @@ def read_serial():
     return lines 
 
 
-def update(frame):   
+def update(frame, tail):   
     data = read_serial()
 
     # Ensures the data exists
     if data:
-        heart_rate = hr.calculate_hr(data)
+        heart_rate, hr_tail = hr.calculate_hr(data, tail) 
         spoxygen = spo2.calculate_spo2(data)
 
         # Add current values into data list 
@@ -52,8 +52,10 @@ def update(frame):
     # Inject the updated queue directly into the plot line
     spo2_line.set_ydata(list(spo2_values))
     hr_line.set_ydata(list(hr_values))
+
+    tail[0] = hr_tail
     
-    return spo2_line, hr_line,
+    return spo2_line, hr_line, hr_tail,
 
 # Create and display graph
 fig, ax = plt.subplots()
@@ -68,8 +70,15 @@ ax.set_title("SPO2 and HR Live Visual")
 ax.grid(True, linestyle="--", alpha=0.5)
 ax.legend(loc="upper left")
 
+tail = [None]
+
 ani = animation.FuncAnimation(
-    fig, update, interval=1000, blit=True, cache_frame_data=False
+    fig, 
+    update, 
+    interval=1000, 
+    blit=True, 
+    cache_frame_data=False, 
+    fargs=(tail,)
 )
 
 plt.show()
