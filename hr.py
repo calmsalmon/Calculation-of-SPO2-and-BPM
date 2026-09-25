@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy.signal import find_peaks, detrend
 
-def calculate_hr(data, hr_tail):
+def calculate_hr(data, hr_tail, SAMPLING_RATE):
     df = pd.Dataframe(data).astype(float)
     df.columns = ['times', 'green', 'red', 'ir', 'ambient']
 
@@ -16,7 +16,7 @@ def calculate_hr(data, hr_tail):
     
     # Calculate bpm based on distance between 2 beats 
     peak_difference = np.diff(peaks)
-    bpm = 60 / (peak_difference / 250)
+    bpm = 60 / (peak_difference / SAMPLING_RATE)
 
     if hr_tail[0] != None:
         tail = tail[0]
@@ -26,7 +26,7 @@ def calculate_hr(data, hr_tail):
         first_difference = tail + peaks[0]
 
         # Calculate bpm for first peak
-        first_bpm = 60 / (first_difference / 250)
+        first_bpm = 60 / (first_difference / SAMPLING_RATE)
         bpm = np.concatenate([first_bpm], bpm)
 
     # Get tail for next sample
